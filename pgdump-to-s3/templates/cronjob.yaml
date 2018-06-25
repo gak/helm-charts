@@ -8,11 +8,15 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  schedule: {{ .Values.cron.schedule }}
+  schedule: "{{ .Values.cron.schedule }}"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: {{ template "pgdump-to-s3.name" . }}
+            release: {{ .Release.Name }}
         spec:
           restartPolicy: OnFailure
           containers:
@@ -27,19 +31,19 @@ spec:
                 - name: AWS_REGION
                   value: "{{ .Values.s3.region }}"
                 - name: S3_BUCKET
-                  values: "{{ .Values.s3.bucket }}"
+                  value: "{{ .Values.s3.bucket }}"
                 - name: S3_PREFIX
-                  values: "{{ .Values.s3.prefix }}"
+                  value: "{{ .Values.s3.prefix }}"
                 - name: S3_SUFFIX
-                  values: "{{ .Values.s3.suffix }}"
+                  value: "{{ .Values.s3.suffix }}"
                 - name: PGHOST
-                  values: "{{ .Values.postgresql.host }}"
+                  value: "{{ .Values.postgresql.host }}"
                 - name: PGUSER
-                  values: "{{ .Values.postgresql.user }}"
+                  value: "{{ .Values.postgresql.user }}"
                 - name: PGPASSWORD
-                  values: "{{ .Values.postgresql.password }}"
+                  value: "{{ .Values.postgresql.password }}"
                 - name: PGDATABASE
-                  values: "{{ .Values.postgresql.database }}"
+                  value: "{{ .Values.postgresql.database }}"
               resources:
 {{ toYaml .Values.resources | indent 16 }}
     {{- with .Values.nodeSelector }}
