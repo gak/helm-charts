@@ -2,29 +2,30 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
 image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
+  repository: gak0/pgdump-to-s3
+  tag: latest
+  pullPolicy: Always
 
-service:
-  type: ClusterIP
-  port: 80
+cron:
+  schedule: "*/1 * * * *"
 
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  path: /
-  hosts:
-    - chart-example.local
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+s3:
+  key: REQUIRED
+  secret: REQUIRED
+  bucket: REQUIRED
+  region: REQUIRED
+
+  # The generated name will be a timestamp surrounded by the prefix and suffix, e.g.:
+  # my-backups/site-2032-01-01T12:34:45Z.pg_dump
+  prefix: "my-backups/site-"
+  suffix: ".pg_dump"
+
+postgresql:
+  host: REQUIRED
+  user: REQUIRED
+  password: REQUIRED
+  database: REQUIRED
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

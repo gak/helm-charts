@@ -1,0 +1,56 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "pgdump-to-s3.fullname" . }}
+  labels:
+    app: {{ template "pgdump-to-s3.name" . }}
+    chart: {{ template "pgdump-to-s3.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: {{ .Values.cron.schedule }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: {{ .Chart.Name }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              env:
+                - name: AWS_ACCESS_KEY_ID
+                  value: "{{ .Values.s3.key }}"
+                - name: AWS_SECRET_ACCESS_KEY
+                  value: "{{ .Values.s3.secret }}"
+                - name: AWS_REGION
+                  value: "{{ .Values.s3.region }}"
+                - name: S3_BUCKET
+                  values: "{{ .Values.s3.bucket }}"
+                - name: S3_PREFIX
+                  values: "{{ .Values.s3.prefix }}"
+                - name: S3_SUFFIX
+                  values: "{{ .Values.s3.suffix }}"
+                - name: PGHOST
+                  values: "{{ .Values.postgresql.host }}"
+                - name: PGUSER
+                  values: "{{ .Values.postgresql.user }}"
+                - name: PGPASSWORD
+                  values: "{{ .Values.postgresql.password }}"
+                - name: PGDATABASE
+                  values: "{{ .Values.postgresql.database }}"
+              resources:
+{{ toYaml .Values.resources | indent 16 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

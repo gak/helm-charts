@@ -2,12 +2,21 @@ apiVersion: v1
 entries:
   pgdump-to-s3:
   - apiVersion: v1
+    appVersion: 0.0.2
+    created: 2018-06-24T18:13:36.643215417-07:00
+    description: A backup cronjob chart to pull from postgres and push to s3.
+    digest: 4c9ed35411b4fa08c1d9182513c53df7cd298c38a8575d983b19ef4db69aa5a3
+    name: pgdump-to-s3
+    urls:
+    - https://gak.github.io/helm-charts/pgdump-to-s3-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v1
     appVersion: 0.0.1
-    created: 2018-06-24T15:58:40.151638805-07:00
+    created: 2018-06-24T18:13:36.643082824-07:00
     description: A backup cronjob chart to pull from postgres and push to s3.
     digest: 9ceea5516306516d5b40296d5b6348ce7f2d2612c0a8290f350ccbd1ab9c5ba2
     name: pgdump-to-s3
     urls:
     - https://gak.github.io/helm-charts/pgdump-to-s3-0.0.1.tgz
     version: 0.0.1
-generated: 2018-06-24T15:58:40.1513969-07:00
+generated: 2018-06-24T18:13:36.642840968-07:00
